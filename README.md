@@ -10,12 +10,11 @@ Envify is a powerful tool designed for DevOps and server administrators, simplif
 
 Envify is an invaluable asset for DevOps teams, ensuring efficient server setup and enabling teams to concentrate on tasks that matter most.
 
-## Usage
+## installation
 
 Getting started with Envify is simple:
 
-- **Download**: Obtain the binary from the [releases](https://github.com/TheAhmedGad/envify/releases) page.
-- **Run**: Execute `$ sudo ./envify` to start using Envify.
+- ``` wget https://github.com/TheAhmedGad/envify/releases/download/1.0.0/envify && chmod +x envify && sudo ./envify && source ~/.bashrc```
 
 ## Contributing
 

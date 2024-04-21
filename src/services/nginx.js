@@ -10,9 +10,9 @@ const nginx = {
         try {
             console.log(chalk.green('Installing Nginx'));
 
-            await runner.run('sudo apt-get install -y nginx')
+            await runner.run('sudo apt-get install -y nginx', [], false)
 
-            console.log(chalk.green('\nNginx installed'));
+            console.log(chalk.green('Nginx installed\n'));
         } catch (error) {
             process.stdout.write(error + "\r\n")
             process.exit(error.code)

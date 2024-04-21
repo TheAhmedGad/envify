@@ -23,7 +23,7 @@ const mysql = {
         try {
             console.log(chalk.green('Installing Mysql'));
 
-            await runner.run('sudo apt-get -y install mysql-server');
+            await runner.run('sudo apt-get -y install mysql-server', [], false);
 
 
             console.log(chalk.green(`Setting root password`));

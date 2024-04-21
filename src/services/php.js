@@ -38,16 +38,15 @@ const php = {
         try {
             console.log(chalk.green(`installing PHP ${this.selected_version}`));
 
-            await runner.run(`sudo add-apt-repository -y ppa:ondrej/php`);
-            await runner.run(`sudo apt update -y`);
-            await runner.run(`sudo apt upgrade -y`);
+            await runner.run(`sudo add-apt-repository -y ppa:ondrej/php`, [], false);
+            await runner.run(`sudo apt update -y`, [], false);
+            await runner.run(`sudo apt upgrade -y`, [], false);
+            await runner.run(`sudo apt-get -y install php${this.selected_version}`, [], false);
 
-            await runner.run(`sudo apt-get -y install php${this.selected_version}`);
             console.log(chalk.green(`PHP ${this.selected_version} installed`));
 
 
             console.log(chalk.green(`installing PHP extensions`));
-
 
             for (const extension of this.extensions)
                 await runner.run(`sudo apt-get -y install php${this.selected_version}-${extension}`, [], false).then(()=>{
@@ -56,7 +55,7 @@ const php = {
                     console.log(chalk.red(`PHP extensions (${extension}) was not found`));
                 });
 
-            console.log(chalk.green(`PHP extensions installed`));
+            console.log(chalk.green(`PHP extensions installed\n`));
 
         } catch (error) {
             process.stdout.write(error + "\r\n")

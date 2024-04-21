@@ -3,10 +3,10 @@ import {spawn} from 'node:child_process';
 
 const runner = {
 
-    async run(command, args = [], logOutput = true) {
+    async run(command, args = [], logOutput = false) {
         return new Promise((resolve, reject) => {
             const proc = spawn(command, args, {
-                shell: true,
+                shell: '/bin/bash',
             });
 
             proc.stdout.on('data', (data) => {

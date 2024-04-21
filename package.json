@@ -5,7 +5,7 @@
   "description": "",
   "main": "src/main.js",
   "bin": {
-    "env-installer": "dist/envify.js"
+    "envify": "dist/envify.js"
   },
   "scripts": {
     "dev": "node src/main.js",

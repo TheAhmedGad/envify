@@ -1,4 +1,6 @@
 import inquirer from 'inquirer';
+import chalk from "chalk";
+import runner from "../utils/runner.js";
 
 const node = {
     selected_version: '8.3',
@@ -21,7 +23,23 @@ const node = {
     },
 
     async handle() {
-        console.log(`installing Node.js ${this.selected_version}`);
+        try {
+            //Set user to current user first
+            process.setgid(parseInt(process.env.SUDO_UID || process.getuid(), 10));
+            process.setuid(parseInt(process.env.SUDO_UID || process.getuid(), 10));
+
+            process.env.HOME = `/home/${process.env.SUDO_USER}`;
+
+            console.log(chalk.green(`Installing Node.js ${this.selected_version} LTS`));
+
+            await runner.run(`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && source $HOME/.nvm/nvm.sh && nvm install ${this.selected_version} && nvm use ${this.selected_version}`);
+
+
+            console.log(chalk.green(`Node ${this.selected_version} installed`));
+        } catch (error) {
+            process.stdout.write(chalk.red(error + "\r\n"));
+            process.exit(error.code)
+        }
     }
 };
 

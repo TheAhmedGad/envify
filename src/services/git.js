@@ -11,9 +11,9 @@ const git = {
         try {
             console.log(chalk.green('Installing Git'));
 
-            await runner.run('sudo apt-get install -y git')
+            await runner.run('sudo apt-get install -y git', [], false)
 
-            console.log(chalk.green('\nGit installed'));
+            console.log(chalk.green('Git installed\n'));
         } catch (error) {
             process.stdout.write(error + "\r\n")
             process.exit(error.code)

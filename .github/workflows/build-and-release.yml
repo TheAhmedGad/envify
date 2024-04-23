@@ -27,7 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: TheAhmedGad/upload-to-release
+      - uses: "TheAhmedGad/upload-to-release"
         with:
           name: envify
           path: release/envify-linux

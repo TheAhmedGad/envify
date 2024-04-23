@@ -30,7 +30,7 @@ const node = {
 
             process.env.HOME = `/home/${process.env.SUDO_USER}`;
 
-            console.log(chalk.green(`Installing Node.js ${this.selected_version} LTS`));
+            console.log(chalk.dim(`Installing Node.js ${this.selected_version} LTS`));
 
             await runner.run(`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && source $HOME/.nvm/nvm.sh && nvm install ${this.selected_version} && nvm use ${this.selected_version}`);
 

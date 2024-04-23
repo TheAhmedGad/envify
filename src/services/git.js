@@ -9,7 +9,7 @@ const git = {
 
     async handle() {
         try {
-            console.log(chalk.green('Installing Git'));
+            console.log(chalk.dim('Installing Git'));
 
             await runner.run('sudo apt-get install -y git', [], false)
 

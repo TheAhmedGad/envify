@@ -21,12 +21,12 @@ const mysql = {
 
     async handle() {
         try {
-            console.log(chalk.green('Installing Mysql'));
+            console.log(chalk.dim('Installing Mysql'));
 
             await runner.run('sudo apt-get -y install mysql-server', [], false);
 
 
-            console.log(chalk.green(`Setting root password`));
+            console.log(chalk.dim(`Setting root password`));
             await runner.run(`sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${this.mysql_password}'; FLUSH PRIVILEGES;"`);
             console.log(chalk.green(`Mysql root password set to: ${this.mysql_password}`));
 

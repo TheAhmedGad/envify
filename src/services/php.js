@@ -36,7 +36,7 @@ const php = {
 
     async handle() {
         try {
-            console.log(chalk.green(`installing PHP ${this.selected_version}`));
+            console.log(chalk.dim(`installing PHP ${this.selected_version}`));
 
             await runner.run(`sudo add-apt-repository -y ppa:ondrej/php`, [], false);
             await runner.run(`sudo apt update -y`, [], false);
@@ -46,7 +46,7 @@ const php = {
             console.log(chalk.green(`PHP ${this.selected_version} installed`));
 
 
-            console.log(chalk.green(`installing PHP extensions`));
+            console.log(chalk.dim(`installing PHP extensions`));
 
             for (const extension of this.extensions)
                 await runner.run(`sudo apt-get -y install php${this.selected_version}-${extension}`, [], false).then(()=>{

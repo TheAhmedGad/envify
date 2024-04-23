@@ -8,6 +8,7 @@ import {nginx} from "./services/nginx.js";
 import {mysql} from "./services/mysql.js";
 import {php} from "./services/php.js";
 import {composer} from "./services/composer.js";
+import {redis} from "./services/redis.js";
 import {node} from "./services/node.js";
 
 if(process.env.USER !== 'root'){
@@ -21,6 +22,7 @@ const services = {
     'GIT': git,
     'PHP': php,
     'Composer': composer,
+    'Redis': redis,
     'Node.js': node,
 };
 

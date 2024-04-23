@@ -7,7 +7,7 @@ const composer = {
     },
 
     async handle() {
-        console.log(chalk.green("Installing Composer"));
+        console.log(chalk.dim("Installing Composer"));
         await runner.run(`sudo apt-get -y install curl wget`, [], false);
         await runner.run(`curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer`, [], false);
         console.log(chalk.green("Composer installed"));

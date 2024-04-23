@@ -9,6 +9,8 @@ jobs:
   build-and-release:
     permissions: write-all
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
 
     steps:
     - name: Checkout code
@@ -29,6 +31,7 @@ jobs:
       uses: rymndhng/release-on-push-action@master
       with:
         bump_version_scheme: minor
+        tag_prefix: v
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2

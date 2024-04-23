@@ -27,13 +27,18 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Create Release
-      uses: rymndhng/release-on-push-action@master
+    # - name: Create Release
+    #   uses: rymndhng/release-on-push-action@master
+    #   with:
+    #     bump_version_scheme: minor
+    #     tag_prefix: v
+    #     files: | 
+    #       release/envify-linux
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
       with:
-        bump_version_scheme: minor
-        tag_prefix: v
-        files: | 
-          release/envify-linux
+        files: release/envify-linux
 
        
     - name: Check Output Parameters

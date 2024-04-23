@@ -5,7 +5,7 @@ Envify is a powerful tool designed for DevOps and server administrators, simplif
 - **Automation**: Envify automates the setup of environments, ensuring consistency and reliability across different servers and environments.
 - **Reduced Error**: By automating installation, Envify reduces the risk of human error and saves significant time spent on manual configurations.
 - **Focus on Strategic Tasks**: With Envify handling repetitive setup procedures, DevOps teams can focus more on strategic tasks that drive innovation and growth.
-- 
+
 Envify is an invaluable asset for DevOps teams, ensuring efficient server setup and enabling teams to concentrate on tasks that matter most.
 
 

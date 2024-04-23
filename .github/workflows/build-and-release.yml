@@ -2,8 +2,8 @@ name: Build and Release
 
 on:
   push:
-    tags:
-      - '*'
+    branches: 
+      - main
       
 jobs:
   build-and-release:
@@ -24,6 +24,11 @@ jobs:
       run: npx @yao-pkg/pkg --target=node20-linux-x64 --out-path release dist/envify.js 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create Release
+      uses: rymndhng/release-on-push-action@master
+      with:
+        bump_version_scheme: minor
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2

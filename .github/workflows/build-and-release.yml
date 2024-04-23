@@ -32,6 +32,8 @@ jobs:
       with:
         bump_version_scheme: minor
         tag_prefix: v
+        files: | 
+          release/envify-linux
 
        
     - name: Check Output Parameters

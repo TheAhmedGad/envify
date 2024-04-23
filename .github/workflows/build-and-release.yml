@@ -21,7 +21,7 @@ jobs:
       run: npm run build
 
     - name: Create Binary
-      run: npx @yao-pkg/pkg --target=node20-linux-x64 --out-path release dist/envify.js 
+      run: npx @yao-pkg/pkg --out-path release dist/envify.js 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

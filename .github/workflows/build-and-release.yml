@@ -28,14 +28,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload binaries to release
-        uses: "marvinpinto/action-automatic-releases@latest"
+        uses: Shopify/upload-to-release@v1
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: false
-          title: "Latest Build"
-          files: |
-            release/envify-linux
+          name: envify
+          path: release/envify-linux
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          content-type: text/plain # Optional
+
+#      - name: Upload binaries to release
+#        uses: "marvinpinto/action-automatic-releases@latest"
+#        with:
+#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+#          automatic_release_tag: "latest"
+#          prerelease: false
+#          title: "Latest Build"
+#          files: |
+#            release/envify-linux
 #
 #      - name: Upload binaries to release
 #        uses: svenstaro/upload-release-action@v2

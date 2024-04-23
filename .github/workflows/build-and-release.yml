@@ -2,16 +2,16 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - main
-
+    tags:
+      - '*'
+      
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Install dependencies
       run: npm install
@@ -19,7 +19,17 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: Create Release
+    - name: Create Binary
       run: npx @yao-pkg/pkg --out-path release dist/envify.js
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Update Release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: envify-linux
+        asset_name: envify
+        tag: ${{ github.ref }}
+        overwrite: true
+        body: "This is my release text"

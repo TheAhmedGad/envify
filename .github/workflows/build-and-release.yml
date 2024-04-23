@@ -2,57 +2,37 @@ name: Build and Release
 
 on:
   push:
-    branches: 
-      - main
-      
+    tags:
+      - '*'
+
 jobs:
   build-and-release:
     permissions: write-all
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build
-      run: npm run build
+      - name: Build
+        run: npm run build
 
-    - name: Create Binary
-      run: npx @yao-pkg/pkg --out-path release dist/envify.js 
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Binary
+        run: npx @yao-pkg/pkg --out-path release dist/envify.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # - name: Create Release
-    #   uses: rymndhng/release-on-push-action@master
-    #   with:
-    #     bump_version_scheme: minor
-    #     tag_prefix: v
-    #     files: | 
-    #       release/envify-linux
-
-    - name: Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: release/envify-linux
-
-       
-    - name: Check Output Parameters
-      run: |
-        echo "Got tag name ${{ steps.release.outputs.tag_name }}"
-        echo "Got release version ${{ steps.release.outputs.version }}"
-        echo "Upload release artifacts to ${{ steps.release.outputs.upload_url }}"
-
-    # - name: Upload binaries to release
-    #   uses: svenstaro/upload-release-action@v2
-    #   with:
-    #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-    #     file: release/envify-linux
-    #     asset_name: envify
-    #     tag: ${{ github.ref }}
-    #     overwrite: true
-    #     body: "This is my release text"
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: release/envify-linux
+          asset_name: envify
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "This is my release text"

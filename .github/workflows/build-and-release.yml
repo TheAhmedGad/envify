@@ -20,6 +20,6 @@ jobs:
       run: npm run build
 
     - name: Create Release
-      run: npx @yao-pkg/pkg release dist/envify.js --target=node20-linux-x64
+      run: npx @yao-pkg/pkg --out-path release dist/envify.js
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

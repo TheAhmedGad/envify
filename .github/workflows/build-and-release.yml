@@ -35,4 +35,4 @@ jobs:
           asset_name: envify
           tag: ${{ github.ref }}
           overwrite: true
-          body: "This is my release text"
+          body: ${{ github.ref }}

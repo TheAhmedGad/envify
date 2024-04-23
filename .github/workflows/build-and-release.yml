@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload binaries to release
-        uses: Shopify/upload-to-release@v1
+        uses: Shopify/upload-to-release
         with:
           name: envify
           path: release/envify-linux

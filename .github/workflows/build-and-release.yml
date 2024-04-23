@@ -27,13 +27,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload binaries to release
-        uses: "Shopify/upload-to-release@v2.0.0"
+      - uses: Shopify/upload-to-release@v2.0.0
         with:
           name: envify
           path: release/envify-linux
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          content-type: text/plain # Optional
 
 #      - name: Upload binaries to release
 #        uses: "marvinpinto/action-automatic-releases@latest"

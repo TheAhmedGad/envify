@@ -10,6 +10,8 @@ import {php} from "./services/php.js";
 import {composer} from "./services/composer.js";
 import {redis} from "./services/redis.js";
 import {node} from "./services/node.js";
+import { Spinner } from "@topcli/spinner";
+
 
 if(process.env.USER !== 'root'){
     console.error(chalk.red('You must run app as root'));
@@ -38,7 +40,7 @@ inquirer.prompt([{
     },
 }]).then(async (answers) => {
     for (const service of answers.services)
-        await services[service].ask();
+        await services[service].prepare();
 
     inquirer.prompt([{
         type: 'confirm',
@@ -46,8 +48,19 @@ inquirer.prompt([{
         name: 'confirm',
         default: false
     }]).then(async (answer) => {
-        if(answer.confirm)
+        if(answer.confirm) {
+            const spinner = new Spinner().start(` Installing services`);
+
             for (const service of answers.services)
-                await services[service].handle();
+                await services[service].handle().then().catch((err)=>{});
+
+            spinner.succeed(` All services installed  (${spinner.elapsedTime.toFixed(2)}ms)`);
+        }
+    }).then(async ()=>{
+        for (const service of answers.services)
+            await services[service].afterInstall();
+
     })
+
+
 });

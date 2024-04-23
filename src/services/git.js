@@ -1,24 +1,31 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
 import runner from "../utils/runner.js";
+import {Spinner} from "@topcli/spinner";
 
 const git = {
-    async ask() {
+    async prepare() {
         return this;
     },
 
     async handle() {
-        try {
-            console.log(chalk.dim('Installing Git'));
+        return new Promise((resolve, reject) => {
+            const spinner = new Spinner().start(` Installing Git`);
 
-            await runner.run('sudo apt-get install -y git', [], false)
-
-            console.log(chalk.green('Git installed\n'));
-        } catch (error) {
-            process.stdout.write(error + "\r\n")
-            process.exit(error.code)
-        }
+            runner.run('sudo apt-get install -y git', [])
+                .then((res)=>{
+                    spinner.succeed(` GIT installed  (${spinner.elapsedTime.toFixed(2)}ms)`);
+                    resolve();
+                })
+                .catch((err)=>{
+                    spinner.failed(`failed to install Git`);
+                    reject(err);
+                })
+        });
     },
+
+    async afterInstall() {
+    }
 };
 
 export {git};

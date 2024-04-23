@@ -1,11 +1,12 @@
 import inquirer from 'inquirer';
 import chalk from "chalk";
 import runner from "../utils/runner.js";
+import {Spinner} from "@topcli/spinner";
 
 const node = {
     selected_version: '8.3',
 
-    async ask() {
+    async prepare() {
         await inquirer.prompt([
             {
                 type: 'list',
@@ -23,23 +24,26 @@ const node = {
     },
 
     async handle() {
-        try {
+        return new Promise((resolve, reject) => {
+            const spinner = new Spinner().start(` Installing Node.js & npm`);
             //Set user to current user first
             process.setgid(parseInt(process.env.SUDO_UID || process.getuid(), 10));
             process.setuid(parseInt(process.env.SUDO_UID || process.getuid(), 10));
 
             process.env.HOME = `/home/${process.env.SUDO_USER}`;
 
-            console.log(chalk.dim(`Installing Node.js ${this.selected_version} LTS`));
+            runner.run(`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && source $HOME/.nvm/nvm.sh && nvm install ${this.selected_version} && nvm use ${this.selected_version}`).then((res)=>{
+                spinner.succeed(` Node.js & npm installed  (${spinner.elapsedTime.toFixed(2)}ms)`);
+                resolve();
+            }).catch((err)=>{
+                spinner.succeed(` Failed to install Node.js`);
+                reject();
+            });
+        });
+    },
 
-            await runner.run(`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && source $HOME/.nvm/nvm.sh && nvm install ${this.selected_version} && nvm use ${this.selected_version}`);
-
-
-            console.log(chalk.green(`Node ${this.selected_version} installed`));
-        } catch (error) {
-            process.stdout.write(chalk.red(error + "\r\n"));
-            process.exit(error.code)
-        }
+    async afterInstall() {
+        console.log(chalk.dim(`Node Version : `) + chalk.green(this.selected_version));
     }
 };
 

@@ -1,23 +1,27 @@
 import chalk from 'chalk';
 import runner from '../utils/runner.js';
+import {Spinner} from "@topcli/spinner";
 
 const nginx = {
-    async ask() {
+    async prepare() {
         return this;
     },
 
     async handle() {
-        try {
-            console.log(chalk.dim('Installing Nginx'));
-
-            await runner.run('sudo apt-get install -y nginx', [], false)
-
-            console.log(chalk.green('Nginx installed\n'));
-        } catch (error) {
-            process.stdout.write(error + "\r\n")
-            process.exit(error.code)
-        }
+        return new Promise((resolve, reject) => {
+            const spinner = new Spinner().start(` Installing nginx`);
+            runner.run('sudo apt-get install -y nginx').then((res) => {
+                spinner.succeed(` Nginx installed  (${spinner.elapsedTime.toFixed(2)}ms)`);
+                resolve();
+            }).catch((err) => {
+                spinner.failed(`failed to install nginx`);
+                reject(err);
+            });
+        });
     },
+
+    async afterInstall() {
+    }
 };
 
 export {nginx};

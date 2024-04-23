@@ -1,23 +1,24 @@
 import inquirer from 'inquirer';
 import chalk from "chalk";
 import runner from "../utils/runner.js";
+import {Spinner} from "@topcli/spinner";
 
 const php = {
     selected_version: '8.3',
 
-    extensions: [
-        'fpm',
-        'mbstring',
-        'bcmath',
-        'curl',
-        'json',
-        'mysql',
-        'tokenizer',
-        'xml',
-        'zip'
-    ],
+    extensions: {
+        'fpm': false,
+        'mbstring': false,
+        'bcmath': false,
+        'curl': false,
+        'json': false,
+        'mysql': false,
+        'tokenizer': false,
+        'xml': false,
+        'zip': false
+    },
 
-    async ask() {
+    async prepare() {
         await inquirer.prompt([
             {
                 type: 'list',
@@ -35,33 +36,51 @@ const php = {
     },
 
     async handle() {
-        try {
-            console.log(chalk.dim(`installing PHP ${this.selected_version}`));
-
-            await runner.run(`sudo add-apt-repository -y ppa:ondrej/php`, [], false);
-            await runner.run(`sudo apt update -y`, [], false);
-            await runner.run(`sudo apt upgrade -y`, [], false);
-            await runner.run(`sudo apt-get -y install php${this.selected_version}`, [], false);
-
-            console.log(chalk.green(`PHP ${this.selected_version} installed`));
-
-
-            console.log(chalk.dim(`installing PHP extensions`));
-
-            for (const extension of this.extensions)
-                await runner.run(`sudo apt-get -y install php${this.selected_version}-${extension}`, [], false).then(()=>{
-                    console.log(chalk.green(`php-${extension} installed successfully`));
-                }).catch((err)=>{
-                    console.log(chalk.red(`PHP extensions (${extension}) was not found`));
+        return new Promise((resolve, reject) => {
+            const spinner = new Spinner().start(` Installing PHP`);
+            runner.run(`sudo add-apt-repository -y ppa:ondrej/php`).then(() => {
+                runner.run(`sudo apt update -y`).then(() => {
+                    runner.run(`sudo apt upgrade -y`).then(() => {
+                        runner.run(`sudo apt-get -y install php${this.selected_version}`).then(async () => {
+                            spinner.succeed(` PHP installed (${spinner.elapsedTime.toFixed(2)}ms)`);
+                            for (const extension of Object.keys(this.extensions)) {
+                                const spinner = new Spinner().start(`   Installing php-${extension} `, {withPrefix: ' - '});
+                                await runner.run(`sudo apt-get -y install php${this.selected_version}-${extension}`).then(() => {
+                                    this.extensions[extension] = true;
+                                    spinner.succeed(`   php-${extension} installed (${spinner.elapsedTime.toFixed(2)}ms)`)
+                                }).catch((err) => {
+                                    spinner.failed(`   php-${extension} was not found`)
+                                });
+                            }
+                            resolve();
+                        }).catch((err) => {
+                            spinner.failed(`failed to install PHP`)
+                            reject(err);
+                        });
+                    }).catch((err) => {
+                        spinner.failed(`failed to Upgrade ubuntu repos.`)
+                        reject(err);
+                    });
+                }).catch((err) => {
+                    spinner.failed(`failed to Update ubuntu repos.`)
+                    reject(err);
                 });
+            }).catch((err) => {
+                spinner.failed(`failed to Add PHP repo.`)
+                reject(err);
+            });
+        });
+    },
+    async afterInstall() {
+        console.log(
+            chalk.dim('PHP Version: ') +
+            chalk.green(`${this.selected_version}`)
+        );
 
-            console.log(chalk.green(`PHP extensions installed\n`));
-
-        } catch (error) {
-            process.stdout.write(error + "\r\n")
-            process.exit(error.code)
-        }
-
+        console.log(
+            chalk.dim('installed PHP extensions : ') +
+            chalk.green(`[${Object.entries(this.extensions).filter((o)=> o[1] === true).map(o=> o[0] ).join(', ')}]`)
+        );
     }
 };
 

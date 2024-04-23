@@ -1,11 +1,12 @@
 import inquirer from 'inquirer';
 import chalk from "chalk";
 import runner from "../utils/runner.js";
+import {Spinner} from "@topcli/spinner";
 
 const mysql = {
     mysql_password: '8.0',
 
-    async ask() {
+    async prepare() {
         await inquirer.prompt([
             {
                 type: 'input',
@@ -20,22 +21,29 @@ const mysql = {
     },
 
     async handle() {
-        try {
-            console.log(chalk.dim('Installing Mysql'));
-
-            await runner.run('sudo apt-get -y install mysql-server', [], false);
-
-
-            console.log(chalk.dim(`Setting root password`));
-            await runner.run(`sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${this.mysql_password}'; FLUSH PRIVILEGES;"`);
-            console.log(chalk.green(`Mysql root password set to: ${this.mysql_password}`));
-
-            console.log(chalk.green('Mysql installed'));
-        } catch (error) {
-            process.stdout.write(error + "\r\n")
-            process.exit(error.code)
-        }
+        return new Promise((resolve, reject) => {
+            const spinner = new Spinner().start(` Installing MySQL`);
+            runner.run('sudo apt-get -y install mysql-server').then(() => {
+                runner.run(`sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${this.mysql_password}'; FLUSH PRIVILEGES;"`).then(() => {
+                    spinner.succeed(` MySQL installed  (${spinner.elapsedTime.toFixed(2)}ms)`);
+                    resolve();
+                }).catch((err) => {
+                    spinner.failed(`MySQL installed but failed to set root password`);
+                    reject(err);
+                })
+            }).catch(() => {
+                spinner.failed(`failed to install MySQL`);
+                reject();
+            });
+        });
     },
+
+    async afterInstall() {
+        console.log(
+            chalk.dim('Mysql root password set to: ') +
+            chalk.green(`${this.mysql_password}`)
+        );
+    }
 };
 
 export {mysql};

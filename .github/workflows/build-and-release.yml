@@ -2,8 +2,8 @@ name: Build and Release
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - main
       
 jobs:
   build-and-release:
@@ -23,13 +23,3 @@ jobs:
       run: npx @yao-pkg/pkg --out-path release dist/envify.js
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Update Release
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: envify-linux
-        asset_name: envify
-        tag: ${{ github.ref }}
-        overwrite: true
-        body: "This is my release text"

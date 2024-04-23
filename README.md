@@ -25,6 +25,7 @@ Contributions are welcome! If you encounter any issues or have ideas for new fea
 To contribute to Envify:
 
 - **Fork**: Fork the repository.
+- install global debendencies ``` npm i -g @yao-pkg/pkg-fetch @yao-pkg/pkg ```
 - **Setup**: Run `npm i` to install dependencies.
 - **Modify**: Make your modifications.
 - **Submit**: Open a new [PR](https://github.com/TheAhmedGad/envify/pulls) to propose changes.

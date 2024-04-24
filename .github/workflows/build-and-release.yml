@@ -36,8 +36,10 @@ jobs:
       - name: Print GitHub token
         run: echo ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Release and publish binary
+      - name: Push to Release
         uses: TheAhmedGad/push-to-release@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           binary-path: ./release/envify-linux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

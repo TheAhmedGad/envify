@@ -27,12 +27,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload binaries to release
-        uses: "TheAhmedGad/upload-to-release@1.0.0"
+      - name: Create Release and publish binary
+        uses: TheAhmedGad/push-to-release@main
         with:
-          name: envify
-          path: release/envify-linux
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          binary-path: ./release/envify-linux
 
 #      - name: Upload binaries to release
 #        uses: "marvinpinto/action-automatic-releases@latest"

@@ -33,6 +33,9 @@ jobs:
       - name: Print contents of binary directory
         run: ls -l ./release/envify-linux
 
+      - name: Print GitHub token
+        run: echo ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Release and publish binary
         uses: TheAhmedGad/push-to-release@main
         with:

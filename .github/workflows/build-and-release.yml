@@ -27,28 +27,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: List files in release directory
+        run: ls -l release
+
+      - name: Print contents of binary directory
+        run: ls -l ./release/envify-linux
+
       - name: Create Release and publish binary
         uses: TheAhmedGad/push-to-release@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           binary-path: ./release/envify-linux
-
-#      - name: Upload binaries to release
-#        uses: "marvinpinto/action-automatic-releases@latest"
-#        with:
-#          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-#          automatic_release_tag: "latest"
-#          prerelease: false
-#          title: "Latest Build"
-#          files: |
-#            release/envify-linux
-#
-#      - name: Upload binaries to release
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: release/envify-linux
-#          asset_name: envify
-#          tag: ${{ github.ref }}
-#          overwrite: true
-#          body: ${{ github.ref }}

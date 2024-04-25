@@ -67,8 +67,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+      - uses: AButler/upload-release-assets@v3.0
         with:
-          name: envify
-          path: release/envify
+          files: "release/envify"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

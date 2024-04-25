@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { spawn } from 'node:child_process'
 
 const runner = {
-  logOutput: false,
+  logOutput: true,
 
   withOutput() {
     return this

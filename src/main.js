@@ -11,6 +11,7 @@ import { composer } from './services/composer.js'
 import { redis } from './services/redis.js'
 import { node } from './services/node.js'
 import { Spinner } from '@topcli/spinner'
+import { docker } from './services/docker.js'
 
 if (process.env.USER !== 'root') {
   console.error(chalk.red('You must run app as root!'))
@@ -26,6 +27,7 @@ const services = {
   Redis: redis,
   'Node.js': node,
   OhMyZsh: ohmyzsh,
+  Docker: docker
 }
 
 inquirer

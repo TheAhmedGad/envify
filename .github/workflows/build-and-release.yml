@@ -1,6 +1,13 @@
 name: Build and Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        description: ssss
+        default: false
   push:
     branches:
       - main
@@ -43,23 +50,13 @@ jobs:
           # Example using npm version patch for Semantic Versioning
           echo "::set-output name=new_version::$(node -e 'console.log(require("./package.json").version)')"
 
-      - name: Create Tag
-        id: create_tag
-        run: git tag v${{ steps.bump_version.outputs.new_version }}
-
-      - name: Push Tag
-        uses: actions/github-script@v4
+      - name: Create tag
+        uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const tag = '${{ steps.bump_version.outputs.new_version }}';
-            const octokit = new Octokit();
-            octokit.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `refs/tags/${tag}`,
-              sha: context.sha
-            });
+          tag: ${{ steps.bump_version.outputs.new_version }}
+          tag_exists_error: true
+          message: "${{ steps.bump_version.outputs.new_version }} release"
 
       - name: Create Release
         id: create_release

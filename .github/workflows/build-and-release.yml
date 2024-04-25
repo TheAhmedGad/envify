@@ -23,23 +23,46 @@ jobs:
         run: npm run build
 
       - name: Create Binary
-        run: npx @yao-pkg/pkg --out-path release dist/envify.js
+        run: npx @yao-pkg/pkg --out-path release --target=node20-linux-x64 dist/envify.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: List files in release directory
-        run: ls -l release
+      - name: Bump version
+        id: bump_version
+        run: |
+          # Example using npm version patch for Semantic Versioning
+          npm version patch
+          echo "::set-output name=new_version::$(node -e 'console.log(require("./package.json").version)')"
 
-      - name: Print contents of binary directory
-        run: ls -l ./release/envify-linux
+      - name: Create Tag
+        id: create_tag
+        run: git tag v${{ steps.bump_version.outputs.new_version }}
 
-      - name: Print GitHub token
-        run: echo ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push to Release
-        uses: TheAhmedGad/push-to-release@main
+      - name: Push Tag
+        uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          binary-path: ./release/envify-linux
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const tag = '${{ steps.bump_version.outputs.new_version }}';
+            const octokit = new Octokit();
+            octokit.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${tag}`,
+              sha: context.sha
+            });
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.bump_version.outputs.new_version }}
+          release_name: Release ${{ steps.bump_version.outputs.new_version }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: envify
+          path: release/envify

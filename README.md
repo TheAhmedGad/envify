@@ -1,3 +1,5 @@
+[![Build and Release](https://github.com/TheAhmedGad/envify/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/TheAhmedGad/envify/actions/workflows/build-and-release.yml)
+
 ## About
 
 Envify is a powerful tool designed for DevOps and server administrators, simplifying the installation process of essential software and tools and enhancing the efficiency of server preparations for deployments.

@@ -1,13 +1,6 @@
 name: Build and Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      debug:
-        type: boolean
-        required: false
-        description: ssss
-        default: false
   push:
     branches:
       - main
@@ -71,3 +64,4 @@ jobs:
         with:
           files: "release/envify"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+          release-tag: ${{ steps.bump_version.outputs.new_version }}

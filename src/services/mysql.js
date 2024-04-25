@@ -2,6 +2,7 @@ import inquirer from 'inquirer'
 import chalk from 'chalk'
 import runner from '../utils/runner.js'
 import { Spinner } from '@topcli/spinner'
+import { formatElapsedTime } from '../utils/helpers.js'
 
 const mysql = {
   mysql_password: '8.0',
@@ -30,6 +31,7 @@ const mysql = {
       spinner.succeed(`MySQL installed ${formatElapsedTime(spinner)}`)
       return Promise.resolve()
     } catch (error) {
+      console.error(error)
       spinner.failed('Failed to install MySQL')
       return Promise.reject(error)
     }

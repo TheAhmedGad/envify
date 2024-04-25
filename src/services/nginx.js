@@ -1,5 +1,6 @@
 import runner from '../utils/runner.js'
 import { Spinner } from '@topcli/spinner'
+import { formatElapsedTime } from '../utils/helpers.js'
 
 const nginx = {
   async prepare() {

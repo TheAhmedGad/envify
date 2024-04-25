@@ -2,6 +2,7 @@ import inquirer from 'inquirer'
 import chalk from 'chalk'
 import runner from '../utils/runner.js'
 import { Spinner } from '@topcli/spinner'
+import { formatElapsedTime } from '../utils/helpers.js'
 
 const node = {
   selected_version: '8.3',

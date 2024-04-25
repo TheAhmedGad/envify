@@ -7,21 +7,16 @@ const nginx = {
   },
 
   async handle() {
-    return new Promise((resolve, reject) => {
-      const spinner = new Spinner().start(' Installing nginx')
-      runner
-        .run('sudo apt-get install -y nginx')
-        .then(res => {
-          spinner.succeed(
-            ` Nginx installed  (${spinner.elapsedTime.toFixed(2)}ms)`
-          )
-          resolve()
-        })
-        .catch(err => {
-          spinner.failed('failed to install nginx')
-          reject(err)
-        })
-    })
+    const spinner = new Spinner().start('Installing Nginx')
+
+    try {
+      await runner.run('sudo apt-get install -y nginx')
+      spinner.succeed(`Nginx installed ${formatElapsedTime(spinner)}`)
+      return Promise.resolve()
+    } catch (error) {
+      spinner.failed('Failed to install Nginx')
+      return Promise.reject(error)
+    }
   },
 
   async afterInstall() {}

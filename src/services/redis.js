@@ -7,21 +7,16 @@ const redis = {
   },
 
   async handle() {
-    return new Promise((resolve, reject) => {
-      const spinner = new Spinner().start(' Installing Redis')
-      runner
-        .run('sudo apt-get install -y redis-server')
-        .then(res => {
-          spinner.succeed(
-            ` Redis installed  (${spinner.elapsedTime.toFixed(2)}ms)`
-          )
-          resolve()
-        })
-        .catch(err => {
-          spinner.succeed(' Failed to install composer')
-          reject()
-        })
-    })
+    const spinner = new Spinner().start('Installing Redis')
+
+    try {
+      await runner.run('sudo apt-get install -y redis-server')
+      spinner.succeed(`Redis installed ${formatElapsedTime(spinner)}`)
+      return Promise.resolve()
+    } catch (error) {
+      spinner.failed('Failed to install Redis')
+      return Promise.reject(error)
+    }
   },
 
   async afterInstall() {}

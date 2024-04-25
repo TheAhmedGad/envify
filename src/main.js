@@ -12,7 +12,7 @@ import { node } from './services/node.js'
 import { Spinner } from '@topcli/spinner'
 
 if (process.env.USER !== 'root') {
-  console.error(chalk.red('You must run app as root'))
+  console.error(chalk.red('You must run app as root!'))
   process.exit(1)
 }
 
@@ -46,14 +46,16 @@ inquirer
       .prompt([
         {
           type: 'confirm',
-          message: 'Are you sure to continue ? ',
+          message: 'Are you sure to continue ?',
           name: 'confirm',
           default: false
         }
       ])
       .then(async answer => {
         if (answer.confirm) {
-          const spinner = new Spinner().start(` Installing services`)
+          const spinner = new Spinner().start(
+            chalk.blue('Installing services...')
+          )
 
           for (const service of answers.services)
             await services[service]

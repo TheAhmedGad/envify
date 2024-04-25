@@ -24,8 +24,8 @@ Contributions are welcome! If you encounter any issues or have ideas for new fea
 
 ## Contributors
 
-- [@TheAhmedGad](https://github.com/TheAhmedGad)
-- [@Theizekry](https://github.com/theizekry)
+- [Ahmed Gad](https://github.com/TheAhmedGad)
+- [Islam Zekry](https://github.com/theizekry)
 
 ## Development
 

@@ -1,31 +1,26 @@
-import inquirer from "inquirer";
-import chalk from "chalk";
-import runner from "../utils/runner.js";
-import {Spinner} from "@topcli/spinner";
+import runner from '../utils/runner.js'
+import { Spinner } from '@topcli/spinner'
+import { formatElapsedTime } from '../utils/helpers.js'
 
 const git = {
-    async prepare() {
-        return this;
-    },
+  async prepare() {
+    return this
+  },
 
-    async handle() {
-        return new Promise((resolve, reject) => {
-            const spinner = new Spinner().start(` Installing Git`);
+  async handle() {
+    const spinner = new Spinner().start('Installing Git')
 
-            runner.run('sudo apt-get install -y git', [])
-                .then((res)=>{
-                    spinner.succeed(` GIT installed  (${spinner.elapsedTime.toFixed(2)}ms)`);
-                    resolve();
-                })
-                .catch((err)=>{
-                    spinner.failed(`failed to install Git`);
-                    reject(err);
-                })
-        });
-    },
-
-    async afterInstall() {
+    try {
+      await runner.run('sudo apt-get install -y git', [])
+      spinner.succeed(`GIT installed ${formatElapsedTime(spinner)}`)
+      return Promise.resolve()
+    } catch (error) {
+      spinner.failed('Failed to install Git')
+      return Promise.reject(error)
     }
-};
+  },
 
-export {git};
+  async afterInstall() {}
+}
+
+export { git }

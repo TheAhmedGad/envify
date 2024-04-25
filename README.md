@@ -22,6 +22,11 @@ Getting started with Envify is simple:
 
 Contributions are welcome! If you encounter any issues or have ideas for new features, feel free to submit a pull request on GitHub.
 
+## Contributors
+
+- [@TheAhmedGad](https://github.com/TheAhmedGad)
+- [@Theizekry](https://github.com/theizekry)
+
 ## Development
 
 To contribute to Envify:

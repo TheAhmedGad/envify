@@ -6,6 +6,7 @@ import { git } from './services/git.js'
 import { nginx } from './services/nginx.js'
 import { mysql } from './services/mysql.js'
 import { php } from './services/php.js'
+import { ohmyzsh } from './services/ohmyzsh.js'
 import { composer } from './services/composer.js'
 import { redis } from './services/redis.js'
 import { node } from './services/node.js'
@@ -23,7 +24,8 @@ const services = {
   PHP: php,
   Composer: composer,
   Redis: redis,
-  'Node.js': node
+  'Node.js': node,
+  OhMyZsh: ohmyzsh,
 }
 
 inquirer

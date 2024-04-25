@@ -41,7 +41,6 @@ jobs:
         id: bump_version
         run: |
           # Example using npm version patch for Semantic Versioning
-          npm version patch
           echo "::set-output name=new_version::$(node -e 'console.log(require("./package.json").version)')"
 
       - name: Create Tag

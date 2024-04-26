@@ -37,7 +37,7 @@ const node = {
     const spinner = new Spinner().start('Installing Node.js & npm')
 
     try {
-      process.setgid(parseInt(process.env.SUDO_UID || process.getuid(), 10))
+      process.setgid(parseInt(process.env.SUDO_GUID || process.getgid(), 10))
       process.setuid(parseInt(process.env.SUDO_UID || process.getuid(), 10))
       process.env.HOME = `/home/${process.env.SUDO_USER}`
 

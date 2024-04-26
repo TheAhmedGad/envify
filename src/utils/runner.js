@@ -2,24 +2,33 @@ import chalk from 'chalk'
 import { spawn } from 'node:child_process'
 
 const runner = {
-  logOutput: true,
+  logOutput: false,
+  username: null,
 
   withOutput() {
+    this.logOutput = true
     return this
   },
-  async run(command, args = []) {
+
+  as(username) {
+    this.username = username
+    return this
+  },
+
+  async run(command, args = [], username = null) {
     return new Promise((resolve, reject) => {
-      const proc = spawn(command, args, {
+
+      // whenever need to run as custom user set the user
+      // otherwise run as current process user.
+
+      // su -c "ssh-keygen -t ed25519 -f /home/vmbox/.ssh/envify -C "Envify" -q -N """ vmbox
+      const cmd = this.username ? `su -c '${command}' ${this.username}` : command
+
+      const proc = spawn(cmd, args, {
         shell: '/bin/bash'
       })
 
       proc.stdout.on('data', data => {
-        if (this.logOutput) {
-          process.stdout.write(data.toString().trim() + '\r\n')
-        }
-      })
-
-      proc.stderr.on('data', data => {
         if (this.logOutput) {
           process.stdout.write(data.toString().trim() + '\r\n')
         }
@@ -36,6 +45,9 @@ const runner = {
       proc.on('close', code => {
         code === 0 ? resolve(0) : reject(code)
       })
+
+      // Reset user back to the root
+      this.username = null
     })
   }
 }

@@ -5,6 +5,8 @@ const formatElapsedTime = spinner => {
   return `(` + chalk.yellow(`${spinner.elapsedTime.toFixed(2)}ms`) + `)`
 }
 
+const username = process.env.SUDO_USER || process.env.USER
+
 const isPackageInstalled = async packageName => {
   try {
     const { stdout, stderr } = await new Promise((resolve, reject) => {
@@ -27,4 +29,4 @@ const isPackageInstalled = async packageName => {
   }
 }
 
-export { formatElapsedTime, isPackageInstalled }
+export { formatElapsedTime, isPackageInstalled, username }

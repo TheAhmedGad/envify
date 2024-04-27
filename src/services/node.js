@@ -1,8 +1,8 @@
 import inquirer from 'inquirer'
-import chalk from 'chalk'
 import runner from '../utils/runner.js'
 import { Spinner } from '@topcli/spinner'
-import { formatElapsedTime } from '../utils/helpers.js'
+import {formatElapsedTime, username} from '../utils/helpers.js'
+import output from "../utils/output.js";
 
 const node = {
   selected_version: '8.3',
@@ -37,11 +37,7 @@ const node = {
     const spinner = new Spinner().start('Installing Node.js & npm')
 
     try {
-      process.setgid(parseInt(process.env.SUDO_GUID || process.getgid(), 10))
-      process.setuid(parseInt(process.env.SUDO_UID || process.getuid(), 10))
-      process.env.HOME = `/home/${process.env.SUDO_USER}`
-
-      await runner.run(
+      await runner.as(username).run(
         `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && source $HOME/.nvm/nvm.sh && nvm install ${this.selected_version} && nvm use ${this.selected_version}`
       )
 
@@ -54,9 +50,7 @@ const node = {
   },
 
   async afterInstall() {
-    console.log(
-      chalk.dim('Node Version: ') + chalk.green(this.selected_version)
-    )
+    output().info('Node Version: ').success('this.selected_version').log();
   }
 }
 

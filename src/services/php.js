@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import runner from '../utils/runner.js'
 import { Spinner } from '@topcli/spinner'
 import { formatElapsedTime } from '../utils/helpers.js'
-import output from "../utils/output.js";
+import output from '../utils/output.js'
 
 const php = {
   selectedVersion: '8.3',
@@ -100,10 +100,10 @@ const php = {
 
   async afterInstall() {
     output()
-        .success('\n PHP Version:')
-        .info(this.selectedVersion)
-        .success(' has been installed with all common Extensions.')
-        .log()
+      .success('\n PHP Version: ')
+      .info(this.selectedVersion)
+      .success(' has been installed with all common Extensions.')
+      .log()
   }
 }
 

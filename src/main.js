@@ -10,10 +10,10 @@ import { composer } from './services/composer.js'
 import { redis } from './services/redis.js'
 import { node } from './services/node.js'
 import { Spinner } from '@topcli/spinner'
-import output from "./utils/output.js";
+import output from './utils/output.js'
 
 if (process.env.USER !== 'root') {
-  output().error('You must run app as root!').log();
+  output().error('You must run app as root!').log()
   process.exit(1)
 }
 

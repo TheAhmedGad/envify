@@ -1,8 +1,8 @@
 import inquirer from 'inquirer'
 import runner from '../utils/runner.js'
 import { Spinner } from '@topcli/spinner'
-import {formatElapsedTime, username} from '../utils/helpers.js'
-import output from "../utils/output.js";
+import { formatElapsedTime, username } from '../utils/helpers.js'
+import output from '../utils/output.js'
 
 const node = {
   selected_version: '8.3',
@@ -37,9 +37,11 @@ const node = {
     const spinner = new Spinner().start('Installing Node.js & npm')
 
     try {
-      await runner.as(username).run(
-        `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && source $HOME/.nvm/nvm.sh && nvm install ${this.selected_version} && nvm use ${this.selected_version}`
-      )
+      await runner
+        .as(username)
+        .run(
+          `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && source $HOME/.nvm/nvm.sh && nvm install ${this.selected_version} && nvm use ${this.selected_version}`
+        )
 
       spinner.succeed(`Node.js & npm installed ${formatElapsedTime(spinner)}`)
       return Promise.resolve()
@@ -50,7 +52,7 @@ const node = {
   },
 
   async afterInstall() {
-    output().info('Node Version: ').success('this.selected_version').log();
+    output().info('Node Version: ').success(this.selected_version).log()
   }
 }
 

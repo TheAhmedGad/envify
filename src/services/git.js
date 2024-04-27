@@ -1,6 +1,5 @@
 import runner from '../utils/runner.js'
-import { Spinner } from '@topcli/spinner'
-import { formatElapsedTime } from '../utils/helpers.js'
+import { spinner } from '../utils/helpers.js'
 
 const git = {
   async prepare() {
@@ -8,16 +7,18 @@ const git = {
   },
 
   async handle() {
-    const spinner = new Spinner().start('Installing Git')
-
-    try {
-      await runner.run('sudo apt-get install -y git', [])
-      spinner.succeed(`GIT installed ${formatElapsedTime(spinner)}`)
-      return Promise.resolve()
-    } catch (error) {
-      spinner.failed('Failed to install Git')
-      return Promise.reject(error)
-    }
+    await spinner(
+      'Installing Git',
+      'GIT installed',
+      'Failed to install Git',
+      async () => {
+        await runner.run('sudo apt-get install -y git', [])
+        return Promise.resolve()
+      },
+      async error => {
+        return Promise.reject(error)
+      }
+    )
   },
 
   async afterInstall() {}

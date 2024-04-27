@@ -1,6 +1,5 @@
 import runner from '../utils/runner.js'
-import { Spinner } from '@topcli/spinner'
-import { formatElapsedTime } from '../utils/helpers.js'
+import { spinner } from '../utils/helpers.js'
 
 const nginx = {
   async prepare() {
@@ -8,16 +7,18 @@ const nginx = {
   },
 
   async handle() {
-    const spinner = new Spinner().start('Installing Nginx')
-
-    try {
-      await runner.run('sudo apt-get install -y nginx')
-      spinner.succeed(`Nginx installed ${formatElapsedTime(spinner)}`)
-      return Promise.resolve()
-    } catch (error) {
-      spinner.failed('Failed to install Nginx')
-      return Promise.reject(error)
-    }
+    await spinner(
+      'Installing Nginx',
+      'Nginx installed',
+      'Failed to install Nginx',
+      async () => {
+        await runner.run('sudo apt-get install -y nginx')
+        return Promise.resolve()
+      },
+      async error => {
+        return Promise.reject(error)
+      }
+    )
   },
 
   async afterInstall() {}

@@ -1,6 +1,5 @@
 import runner from '../utils/runner.js'
-import { Spinner } from '@topcli/spinner'
-import { formatElapsedTime } from '../utils/helpers.js'
+import { spinner } from '../utils/helpers.js'
 
 const redis = {
   async prepare() {
@@ -8,16 +7,19 @@ const redis = {
   },
 
   async handle() {
-    const spinner = new Spinner().start('Installing Redis')
-
-    try {
-      await runner.run('sudo apt-get install -y redis-server')
-      spinner.succeed(`Redis installed ${formatElapsedTime(spinner)}`)
-      return Promise.resolve()
-    } catch (error) {
-      spinner.failed('Failed to install Redis')
-      return Promise.reject(error)
-    }
+    await spinner(
+      'Installing Redis',
+      'Redis installed',
+      'Failed to install Redis',
+      async () => {
+        await runner.run('sudo apt-get install -y redis-server')
+        return Promise.resolve()
+      },
+      async error => {
+        this.installation_success = false
+        return Promise.reject(error)
+      }
+    )
   },
 
   async afterInstall() {}

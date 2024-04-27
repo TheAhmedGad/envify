@@ -1,6 +1,5 @@
 import runner from '../utils/runner.js'
-import { Spinner } from '@topcli/spinner'
-import { formatElapsedTime } from '../utils/helpers.js'
+import { spinner } from '../utils/helpers.js'
 
 const composer = {
   async prepare() {
@@ -8,19 +7,21 @@ const composer = {
   },
 
   async handle() {
-    const spinner = new Spinner().start('Installing Composer')
-
-    try {
-      await runner.run('sudo apt-get -y install curl wget')
-      await runner.run(
-        'curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer'
-      )
-      spinner.succeed(`Composer installed ${formatElapsedTime(spinner)}`)
-      return Promise.resolve()
-    } catch (error) {
-      spinner.fail('Failed to install Composer')
-      return Promise.reject(error)
-    }
+    await spinner(
+      'Installing Composer',
+      'Composer installed',
+      'Failed to install Composer',
+      async () => {
+        await runner.run('sudo apt-get -y install curl wget')
+        await runner.run(
+          'curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer'
+        )
+        return Promise.resolve()
+      },
+      async error => {
+        return Promise.reject(error)
+      }
+    )
   },
 
   async afterInstall() {}

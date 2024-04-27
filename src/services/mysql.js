@@ -1,8 +1,7 @@
 import inquirer from 'inquirer'
 import runner from '../utils/runner.js'
-import { Spinner } from '@topcli/spinner'
-import { formatElapsedTime } from '../utils/helpers.js'
 import output from '../utils/output.js'
+import { spinner } from '../utils/helpers.js'
 
 const mysql = {
   mysql_password: 'root',
@@ -22,20 +21,22 @@ const mysql = {
   },
 
   async handle() {
-    const spinner = new Spinner().start('Installing MySQL')
-
-    try {
-      await runner.run('sudo apt-get -y install mysql-server')
-      await runner.run(
-        `sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${this.mysql_password}'; FLUSH PRIVILEGES;"`
-      )
-      spinner.succeed(`MySQL installed ${formatElapsedTime(spinner)}`)
-      return Promise.resolve()
-    } catch (error) {
-      this.installation_success = false
-      spinner.failed('Failed to install MySQL')
-      return Promise.reject(error)
-    }
+    await spinner(
+      'Installing MySQL',
+      'MySQL installed',
+      'Failed to install MySQL',
+      async () => {
+        await runner.run('sudo apt-get -y install mysql-server')
+        await runner.run(
+          `sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${this.mysql_password}'; FLUSH PRIVILEGES;"`
+        )
+        return Promise.resolve()
+      },
+      async error => {
+        this.installation_success = false
+        return Promise.reject(error)
+      }
+    )
   },
 
   async afterInstall() {

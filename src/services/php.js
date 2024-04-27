@@ -1,8 +1,6 @@
 import inquirer from 'inquirer'
-import chalk from 'chalk'
 import runner from '../utils/runner.js'
-import { Spinner } from '@topcli/spinner'
-import { formatElapsedTime } from '../utils/helpers.js'
+import { spinner } from '../utils/helpers.js'
 import output from '../utils/output.js'
 
 const php = {
@@ -59,43 +57,35 @@ const php = {
   },
 
   async handle() {
-    const spinner = new Spinner().start('Installing PHP')
-    try {
-      await runner.run('sudo add-apt-repository -y ppa:ondrej/php')
-      await runner.run('sudo apt update -y')
-      await runner.run('sudo apt upgrade -y')
-      await runner.run(`sudo apt-get -y install php${this.selectedVersion}`)
+    await spinner(
+      'Installing PHP',
+      'PHP installed',
+      'Failed to install PHP',
+      async () => {
+        await runner.run('sudo add-apt-repository -y ppa:ondrej/php')
+        await runner.run('sudo apt update -y')
+        await runner.run('sudo apt upgrade -y')
+        await runner.run(`sudo apt-get -y install php${this.selectedVersion}`)
 
-      spinner.succeed(
-        chalk.bold.green(`PHP installed ${formatElapsedTime(spinner)}`)
-      )
-
-      for (const extension of Object.keys(this.extensions)) {
-        const extensionSpinner = new Spinner().start(
-          `Installing php-${extension}`,
-          { withPrefix: ' - ' }
-        )
-        try {
-          await runner.run(
-            `sudo apt-get -y install php${this.selectedVersion}-${extension}`
-          )
-          this.extensions[extension] = true
-          extensionSpinner.succeed(
-            chalk.greenBright(
-              `php-${extension} installed ${formatElapsedTime(extensionSpinner)}`
-            )
-          )
-        } catch (err) {
-          extensionSpinner.failed(
-            chalk.red(`php-${extension} Failed to install!`)
+        for (const extension of Object.keys(this.extensions)) {
+          await spinner(
+            ` - Installing php-${extension}`,
+            `php-${extension} installed`,
+            `php-${extension} Failed to install!`,
+            async () => {
+              await runner.run(
+                `sudo apt-get -y install php${this.selectedVersion}-${extension}`
+              )
+              this.extensions[extension] = true
+            }
           )
         }
+        return Promise.resolve()
+      },
+      async error => {
+        return Promise.reject(error)
       }
-      return Promise.resolve()
-    } catch (err) {
-      spinner.failed('Failed to install PHP')
-      return Promise.reject(err)
-    }
+    )
   },
 
   async afterInstall() {

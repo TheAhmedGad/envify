@@ -5,7 +5,8 @@ import { formatElapsedTime } from '../utils/helpers.js'
 import output from '../utils/output.js'
 
 const mysql = {
-  mysql_password: '8.0',
+  mysql_password: 'root',
+  installation_success: true,
 
   async prepare() {
     const answer = await inquirer.prompt([
@@ -13,7 +14,7 @@ const mysql = {
         type: 'input',
         name: 'mysql_password',
         message: 'Enter MySQL password',
-        default: 'root'
+        default: this.mysql_password
       }
     ])
     this.mysql_password = answer.mysql_password
@@ -31,17 +32,18 @@ const mysql = {
       spinner.succeed(`MySQL installed ${formatElapsedTime(spinner)}`)
       return Promise.resolve()
     } catch (error) {
-      console.error(error)
+      this.installation_success = false
       spinner.failed('Failed to install MySQL')
       return Promise.reject(error)
     }
   },
 
   async afterInstall() {
-    output()
-      .info('MySQL root password set to: ')
-      .success(this.mysql_password)
-      .log()
+    if (this.installation_success)
+      output()
+        .info('MySQL root password set to: ')
+        .success(this.mysql_password)
+        .log()
   }
 }
 

@@ -1,8 +1,8 @@
 import inquirer from 'inquirer'
-import chalk from 'chalk'
 import runner from '../utils/runner.js'
 import { Spinner } from '@topcli/spinner'
 import { formatElapsedTime } from '../utils/helpers.js'
+import output from "../utils/output.js";
 
 const mysql = {
   mysql_password: '8.0',
@@ -38,10 +38,7 @@ const mysql = {
   },
 
   async afterInstall() {
-    console.log(
-      chalk.dim('MySQL root password set to: ') +
-        chalk.green(`${this.mysql_password}`)
-    )
+    output().info('MySQL root password set to: ').success(this.mysql_password).log()
   }
 }
 

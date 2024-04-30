@@ -31,16 +31,18 @@ const runner = {
 
       proc.stdout.on('data', data => {
         if (this.logOutput) {
-          process.stdout.write(data.toString().trim() + '\r\n')
+          output().info(data.toString().trim()).log()
         }
       })
 
       proc.on('error', err => {
         if (this.logOutput) {
-          output().error('\r' + err)
+          output()
+            .error('\r' + err)
+            .log()
         }
 
-        reject(err)
+        // reject(err)
       })
 
       proc.on('close', code => {

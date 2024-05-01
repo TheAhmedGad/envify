@@ -32,7 +32,11 @@ function output() {
     console.log(message) //stop chaining with and log the current message
   }
 
-  const methods = { text, success, error, warning, info, log }
+  function string() {
+    return message
+  }
+
+  const methods = { text, success, error, warning, info, log, string }
 
   return methods
 }

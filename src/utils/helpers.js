@@ -1,19 +1,25 @@
 import chalk from 'chalk'
 import { exec } from 'child_process'
 import { Spinner } from '@topcli/spinner'
+import output from './output.js'
 
 const username = process.env.SUDO_USER || process.env.USER
 
 const spinner = async (startMsg, successMsg, failMsg, callback, onFail) => {
-  const spinner = new Spinner().start(startMsg)
+  const spinner = new Spinner().start(' ' + startMsg)
 
   try {
     await callback()
-    spinner.succeed(`${successMsg} ${formatElapsedTime(spinner)}`)
+    await spinner.succeed(
+      ' ' +
+        output()
+          .success(`${successMsg} ${formatElapsedTime(spinner)}`)
+          .string()
+    )
     return Promise.resolve()
   } catch (error) {
+    await spinner.failed(' ' + output().error(failMsg).string())
     await onFail(error)
-    spinner.failed(failMsg)
     return Promise.reject(error)
   }
 }

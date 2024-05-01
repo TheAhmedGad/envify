@@ -44,7 +44,7 @@ const envify = {
           .then(async answer => {
             if (answer.confirm) {
               const spinner = new Spinner().start(
-                chalk.blue(`Installing ${stack.name} ...`)
+                chalk.blue(` Installing ${stack.name} ...`)
               )
 
               for (const service of stack.services)

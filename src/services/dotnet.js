@@ -12,7 +12,7 @@ const dotnet = {
       {
         type: 'list',
         name: 'dotnet_version',
-        message: 'Select dotnet version',
+        message: output().primary('Please Select .Net Core Version:').string(),
         choices: ['8.0', '7.0', '6.0'],
         default: this.dotnet_version
       }

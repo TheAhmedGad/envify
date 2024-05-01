@@ -8,6 +8,7 @@ import { mssql } from '../services/mssql.js'
 import { composer } from '../services/composer.js'
 import { node } from '../services/node.js'
 import inquirer from 'inquirer'
+import { pm2 } from '../services/pm2.js'
 
 const services = {
   Nginx: nginx,
@@ -18,7 +19,8 @@ const services = {
   DotNetCore: dotnet,
   Composer: composer,
   Redis: redis,
-  'Node.js': node
+  'Node.js': node,
+  PM2: pm2
 }
 
 const customStack = {
@@ -34,6 +36,10 @@ const customStack = {
         choices: Object.keys(services),
         loop: false,
         validate(answer) {
+          if (answer.includes('PM2'))
+            if (!answer.includes('Node.js'))
+              return 'You must choose Node.js to install pm2'
+
           if (answer.length < 1) return 'You must choose at least 1 service.'
           return true
         }

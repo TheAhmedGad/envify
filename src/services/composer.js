@@ -2,6 +2,7 @@ import runner from '../utils/runner.js'
 import { spinner } from '../utils/helpers.js'
 
 const composer = {
+  name: 'PHP Composer',
   async prepare() {
     return this
   },

@@ -1,18 +1,19 @@
 import inquirer from 'inquirer'
 import chalk from 'chalk'
-import { services } from './services.js'
+import { stacks } from './stacks.js'
 import { Spinner } from '@topcli/spinner'
+import output from './utils/output.js'
 
 const envify = {
   run() {
     inquirer
       .prompt([
         {
-          type: 'checkbox',
+          type: 'list',
           message: 'Select services',
-          name: 'services',
+          name: 'stack',
           loop: false,
-          choices: Object.keys(services).map(s => ({ name: s })),
+          choices: Object.keys(stacks).map(s => s),
           validate(answer) {
             if (answer.length < 1)
               return 'You must choose at least one service.'
@@ -20,9 +21,16 @@ const envify = {
           }
         }
       ])
-      .then(async answers => {
-        for (const service of answers.services)
-          await services[service].prepare()
+      .then(async answer => {
+        const stack = stacks[answer.stack]
+        await stack.collectStackServices()
+        output()
+          .success(
+            `[${stack.services.map(s => s.name).join(', ')}] will be installed `
+          )
+          .log()
+
+        for (const service of stack.services) await service.prepare()
 
         inquirer
           .prompt([
@@ -36,11 +44,11 @@ const envify = {
           .then(async answer => {
             if (answer.confirm) {
               const spinner = new Spinner().start(
-                chalk.blue('Installing services...')
+                chalk.blue(`Installing ${stack.name} ...`)
               )
 
-              for (const service of answers.services)
-                await services[service]
+              for (const service of stack.services)
+                await service
                   .handle()
                   .then()
                   .catch(err => {})
@@ -48,11 +56,9 @@ const envify = {
               spinner.succeed(
                 ` All services installed  (${spinner.elapsedTime.toFixed(2)}ms)`
               )
+
+              for (const service of stack.services) await service.afterInstall()
             }
-          })
-          .then(async () => {
-            for (const service of answers.services)
-              await services[service].afterInstall()
           })
       })
   }

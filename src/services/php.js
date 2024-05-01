@@ -4,6 +4,7 @@ import { spinner } from '../utils/helpers.js'
 import output from '../utils/output.js'
 
 const php = {
+  name: 'PHP',
   selectedVersion: '8.3',
   extensions: {
     common: false,

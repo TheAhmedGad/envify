@@ -4,6 +4,7 @@ import inquirer from 'inquirer'
 import output from '../utils/output.js'
 
 const mssql = {
+  name: 'SQL Server',
   license: 'developer',
   sa_password: 'Ro@t2Ro@t',
 

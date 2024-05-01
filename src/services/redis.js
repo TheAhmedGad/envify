@@ -2,6 +2,7 @@ import runner from '../utils/runner.js'
 import { spinner } from '../utils/helpers.js'
 
 const redis = {
+  name: 'Redis',
   async prepare() {
     return this
   },

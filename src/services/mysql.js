@@ -4,6 +4,7 @@ import output from '../utils/output.js'
 import { spinner } from '../utils/helpers.js'
 
 const mysql = {
+  name: 'MySql',
   mysql_password: 'root',
   installation_success: true,
 

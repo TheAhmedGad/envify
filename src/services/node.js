@@ -4,6 +4,7 @@ import output from '../utils/output.js'
 import { spinner, username } from '../utils/helpers.js'
 
 const node = {
+  name: 'Node.js',
   selected_version: '8.3',
 
   async prepare() {

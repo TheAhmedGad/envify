@@ -2,6 +2,7 @@ import runner from '../utils/runner.js'
 import { spinner } from '../utils/helpers.js'
 
 const nginx = {
+  name: 'Nginx',
   async prepare() {
     return this
   },

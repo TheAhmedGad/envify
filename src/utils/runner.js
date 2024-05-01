@@ -1,5 +1,7 @@
 import { spawn } from 'node:child_process'
 import output from './output.js'
+import fs from 'node:fs'
+import { username as uname } from './helpers.js'
 
 const runner = {
   logOutput: false,
@@ -17,10 +19,12 @@ const runner = {
 
   async run(command, args = [], username = null) {
     return new Promise((resolve, reject) => {
+      const logStream = fs.createWriteStream(`/home/${uname}/envify.log`, {
+        flags: 'a'
+      })
+
       // whenever need to run as custom user set the user
       // otherwise run as current process user.
-
-      // su -c "ssh-keygen -t ed25519 -f /home/vmbox/.ssh/envify -C "Envify" -q -N """ vmbox
       const cmd = this.username
         ? `su -c '${command}' ${this.username}`
         : command
@@ -28,6 +32,9 @@ const runner = {
       const proc = spawn(cmd, args, {
         shell: '/bin/bash'
       })
+
+      proc.stdout.pipe(logStream)
+      proc.stderr.pipe(logStream)
 
       proc.stdout.on('data', data => {
         if (this.logOutput) {

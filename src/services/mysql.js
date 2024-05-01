@@ -25,7 +25,7 @@ const mysql = {
     await spinner(
       'Installing MySQL',
       'MySQL installed',
-      'Failed to install MySQL',
+      'MySQL already installed',
       async () => {
         await runner.run('sudo apt-get -y install mysql-server')
         await runner.run(

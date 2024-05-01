@@ -108,7 +108,12 @@ const mssql = {
     )
   },
 
-  async afterInstall() {}
+  async afterInstall() {
+    output()
+      .info('Sql Server installed with SA Password: ')
+      .success(this.sa_password)
+      .log()
+  }
 }
 
 export { mssql }

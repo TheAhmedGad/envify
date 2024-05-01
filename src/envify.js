@@ -15,8 +15,7 @@ const envify = {
           loop: false,
           choices: Object.keys(stacks).map(s => s),
           validate(answer) {
-            if (answer.length < 1)
-              return 'You must choose at least one service.'
+            if (answer.length < 1) return 'You must choose stack.'
             return true
           }
         }
@@ -43,9 +42,9 @@ const envify = {
           ])
           .then(async answer => {
             if (answer.confirm) {
-              const spinner = new Spinner().start(
-                chalk.blue(`Installing ${stack.name} ...`)
-              )
+              // const spinner = new Spinner().start(
+              //   chalk.blue(`Installing ${stack.name} ...`)
+              // )
 
               for (const service of stack.services)
                 await service
@@ -53,11 +52,11 @@ const envify = {
                   .then()
                   .catch(err => {})
 
-              spinner.succeed(
-                ` All services installed  (${spinner.elapsedTime.toFixed(2)}ms)`
-              )
+              // spinner.succeed(
+              //   ` All services installed  (${spinner.elapsedTime.toFixed(2)}ms)`
+              // )
 
-              for (const service of stack.services) await service.afterInstall()
+              // for (const service of stack.services) await service.afterInstall()
             }
           })
       })

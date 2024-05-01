@@ -10,6 +10,7 @@ import { pm2 } from '../services/pm2.js'
 const laravelStack = {
   name: 'laravel-stack',
   services: [git, nginx, mysql, php, composer, redis, node, pm2],
+
   async collectStackServices() {}
 }
 

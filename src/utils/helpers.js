@@ -4,15 +4,15 @@ import { Spinner } from '@topcli/spinner'
 
 const username = process.env.SUDO_USER || process.env.USER
 
-const spinner = (startMsg, successMsg, failMsg, callback, onFail) => {
+const spinner = async (startMsg, successMsg, failMsg, callback, onFail) => {
   const spinner = new Spinner().start(startMsg)
 
   try {
-    callback()
+    await callback()
     spinner.succeed(`${successMsg} ${formatElapsedTime(spinner)}`)
     return Promise.resolve()
   } catch (error) {
-    onFail(error)
+    await onFail(error)
     spinner.failed(failMsg)
     return Promise.reject(error)
   }

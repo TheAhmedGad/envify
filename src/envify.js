@@ -11,15 +11,18 @@ const envify = {
           type: 'checkbox',
           message: 'Select services',
           name: 'services',
+          loop: false,
           choices: Object.keys(services).map(s => ({ name: s })),
           validate(answer) {
-            if (answer.length < 1) return 'You must choose at least one service.'
+            if (answer.length < 1)
+              return 'You must choose at least one service.'
             return true
           }
         }
       ])
       .then(async answers => {
-        for (const service of answers.services) await services[service].prepare()
+        for (const service of answers.services)
+          await services[service].prepare()
 
         inquirer
           .prompt([
@@ -40,8 +43,7 @@ const envify = {
                 await services[service]
                   .handle()
                   .then()
-                  .catch(err => {
-                  })
+                  .catch(err => {})
 
               spinner.succeed(
                 ` All services installed  (${spinner.elapsedTime.toFixed(2)}ms)`

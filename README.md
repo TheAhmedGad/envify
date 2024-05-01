@@ -22,7 +22,7 @@ https://github.com/TheAhmedGad/envify/assets/25646168/6035fa1d-4e9e-469d-b946-b1
 
 Getting started with Envify is simple:
 
-- `wget https://github.com/TheAhmedGad/envify/releases/latest/download/envify && chmod +x envify && sudo ./envify`
+- `sudo wget -P /usr/local/bin https://github.com/TheAhmedGad/envify/releases/latest/download/envify && sudo envify`
 
 ## Contributing
 

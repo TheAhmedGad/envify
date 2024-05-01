@@ -9,6 +9,7 @@ import { composer } from '../services/composer.js'
 import { node } from '../services/node.js'
 import inquirer from 'inquirer'
 import { pm2 } from '../services/pm2.js'
+import { AngularCli } from '../services/angular-cli.js'
 
 const services = {
   Nginx: nginx,
@@ -19,8 +20,9 @@ const services = {
   DotNetCore: dotnet,
   Composer: composer,
   Redis: redis,
-  'Node.js': node,
-  PM2: pm2
+  Node: node,
+  PM2: pm2,
+  AngularCli: AngularCli
 }
 
 const customStack = {
@@ -36,9 +38,9 @@ const customStack = {
         choices: Object.keys(services),
         loop: false,
         validate(answer) {
-          if (answer.includes('PM2'))
-            if (!answer.includes('Node.js'))
-              return 'You must choose Node.js to install pm2'
+          if (answer.includes('PM2') || answer.includes('AngularCli'))
+            if (!answer.includes('Node'))
+              return 'Some service is requiring Node'
 
           if (answer.length < 1) return 'You must choose at least 1 service.'
           return true

@@ -16,6 +16,7 @@ const php = {
     tokenizer: false,
     xml: false,
     zip: false,
+    json: false,
     gd: false,
     intl: false,
     xsl: false,
@@ -71,15 +72,15 @@ const php = {
         for (const extension of Object.keys(this.extensions)) {
           await spinner(
             ` - Installing php-${extension}`,
-            `php-${extension} installed`,
-            `php-${extension} Failed to install!`,
+            ` - php-${extension} installed`,
+            ` - php-${extension} Failed to install! (skipped)`,
             async () => {
               await runner.run(
                 `sudo apt-get -y install php${this.selectedVersion}-${extension}`
               )
               this.extensions[extension] = true
             }
-          )
+          ).catch(error => {})
         }
         return Promise.resolve()
       },

@@ -44,6 +44,8 @@ const node = {
           .run(
             `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash && source $HOME/.nvm/nvm.sh && nvm install ${this.selected_version} && nvm use ${this.selected_version}`
           )
+        //set nvm alias default here
+        await runner.as(username).run(`source ~/.bashrc`)
         return Promise.resolve()
       },
       async error => {

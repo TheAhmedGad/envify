@@ -19,7 +19,10 @@ const runner = {
 
   async run(command, args = [], username = null) {
     return new Promise((resolve, reject) => {
-      const logStream = fs.createWriteStream(`/home/${uname}/envify.log`, {
+      const outLogFile = fs.createWriteStream(`/var/envify/out.log`, {
+        flags: 'a'
+      })
+      const errLogFile = fs.createWriteStream(`/var/envify/error.log`, {
         flags: 'a'
       })
 
@@ -33,8 +36,8 @@ const runner = {
         shell: '/bin/bash'
       })
 
-      proc.stdout.pipe(logStream)
-      proc.stderr.pipe(logStream)
+      proc.stdout.pipe(outLogFile)
+      proc.stderr.pipe(errLogFile)
 
       proc.stdout.on('data', data => {
         if (this.logOutput) {

@@ -1,8 +1,7 @@
 [![Build and Release](https://github.com/TheAhmedGad/envify/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/TheAhmedGad/envify/actions/workflows/build-and-release.yml)
-![GitHub package.json dynamic](https://img.shields.io/github/package-json/version/TheAhmedGad/envify)
-
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/TheAhmedGad/envify/total)
 ![GitHub top language](https://img.shields.io/github/languages/top/theAhmedGad/envify)
+![GitHub package.json dynamic](https://img.shields.io/github/package-json/version/TheAhmedGad/envify)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/TheAhmedGad/envify/total)
 
 
 ## About
@@ -23,7 +22,7 @@ https://github.com/TheAhmedGad/envify/assets/25646168/6035fa1d-4e9e-469d-b946-b1
 
 Getting started with Envify is simple:
 
-- ` wget https://github.com/TheAhmedGad/envify/releases/latest/download/envify && chmod +x envify && sudo ./envify && source ~/.bashrc`
+- `wget https://github.com/TheAhmedGad/envify/releases/latest/download/envify && chmod +x envify && sudo ./envify`
 
 ## Contributing
 

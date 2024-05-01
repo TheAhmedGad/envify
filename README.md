@@ -16,7 +16,9 @@ Envify is an invaluable asset for DevOps teams, ensuring efficient server setup 
 
 ## Demo
 
-https://github.com/TheAhmedGad/envify/assets/25646168/6035fa1d-4e9e-469d-b946-b1eb7ba9886a
+
+https://github.com/TheAhmedGad/envify/assets/25646168/cf52c8c6-8288-436d-8282-a6eb26def628
+
 
 ## installation
 

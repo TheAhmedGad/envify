@@ -25,19 +25,23 @@ const mysql = {
     await spinner(
       'Installing MySQL',
       'MySQL installed',
-      'Failed to install MySQL',
+      'MySQL already installed',
       async () => {
         await runner.run('sudo apt-get -y install mysql-server')
         await runner.run(
           `sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${this.mysql_password}'; FLUSH PRIVILEGES;"`
         )
-        return Promise.resolve()
       },
       async error => {
         this.installation_success = false
-        return Promise.reject(error)
       }
     )
+      .then(() => {
+        return Promise.resolve()
+      })
+      .catch(err => {
+        return Promise.reject(err)
+      })
   },
 
   async afterInstall() {

@@ -20,7 +20,8 @@ const mssql = {
           if (answer.length < 8) return 'Password must be at least 8 characters'
 
           const regex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!\"#$%&'()*+,\-.\/:;<=>?@[\\\]^_`{|}~])[A-Za-z\d!\"#$%&'()*+,\-.\/:;<=>?@[\\\]^_`{|}~]{8,128}$/
+
           if (!regex.test(answer))
             return 'Password must contains uppercase letters, lowercase letters, numbers, and symbols.'
 

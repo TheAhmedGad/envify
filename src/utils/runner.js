@@ -6,6 +6,7 @@ import { username as uname } from './helpers.js'
 const runner = {
   logOutput: false,
   username: null,
+  logPath: '/var/log/envify',
 
   withOutput() {
     this.logOutput = true
@@ -19,7 +20,14 @@ const runner = {
 
   async run(command, args = [], username = null) {
     return new Promise((resolve, reject) => {
-      const logStream = fs.createWriteStream(`/home/${uname}/envify.log`, {
+      if (!fs.existsSync(this.logPath)) {
+        fs.mkdirSync(this.logPath)
+      }
+
+      const outLogFile = fs.createWriteStream(`${this.logPath}/out.log`, {
+        flags: 'a'
+      })
+      const errLogFile = fs.createWriteStream(`${this.logPath}/error.log`, {
         flags: 'a'
       })
 
@@ -33,8 +41,8 @@ const runner = {
         shell: '/bin/bash'
       })
 
-      proc.stdout.pipe(logStream)
-      proc.stderr.pipe(logStream)
+      proc.stdout.pipe(outLogFile)
+      proc.stderr.pipe(errLogFile)
 
       proc.stdout.on('data', data => {
         if (this.logOutput) {

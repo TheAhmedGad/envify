@@ -23,13 +23,14 @@ const envify = {
       .then(async answer => {
         const stack = stacks[answer.stack]
         await stack.collectStackServices()
+
+        for (const service of stack.services) await service.prepare()
+
         output()
           .success(
             `[${stack.services.map(s => s.name).join(', ')}] will be installed `
           )
           .log()
-
-        for (const service of stack.services) await service.prepare()
 
         inquirer
           .prompt([
@@ -42,9 +43,9 @@ const envify = {
           ])
           .then(async answer => {
             if (answer.confirm) {
-              // const spinner = new Spinner().start(
-              //   chalk.blue(`Installing ${stack.name} ...`)
-              // )
+              const spinner = new Spinner().start(
+                chalk.blue(`Installing ${stack.name} ...`)
+              )
 
               for (const service of stack.services)
                 await service
@@ -52,11 +53,11 @@ const envify = {
                   .then()
                   .catch(err => {})
 
-              // spinner.succeed(
-              //   ` All services installed  (${spinner.elapsedTime.toFixed(2)}ms)`
-              // )
+              spinner.succeed(
+                ` All services installed  (${spinner.elapsedTime.toFixed(2)}ms)`
+              )
 
-              // for (const service of stack.services) await service.afterInstall()
+              for (const service of stack.services) await service.afterInstall()
             }
           })
       })

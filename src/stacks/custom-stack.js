@@ -42,6 +42,10 @@ const customStack = {
             if (!answer.includes('Node'))
               return 'Some service is requiring Node'
 
+          if (answer.includes('Composer'))
+            if (!answer.includes('PHP'))
+              return 'Composer requiring PHP to install.'
+
           if (answer.length < 1) return 'You must choose at least 1 service.'
           return true
         }

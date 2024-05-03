@@ -1,7 +1,6 @@
-import { spawn } from 'node:child_process'
-import output from './output.js'
 import fs from 'node:fs'
-import { username as uname } from './helpers.js'
+import output from './output.js'
+import { spawn } from 'node:child_process'
 
 const runner = {
   logOutput: false,
@@ -31,6 +30,8 @@ const runner = {
         flags: 'a'
       })
 
+      let stdout = ''
+
       // whenever need to run as custom user set the user
       // otherwise run as current process user.
       const cmd = this.username
@@ -48,6 +49,8 @@ const runner = {
         if (this.logOutput) {
           output().info(data.toString().trim()).log()
         }
+
+        stdout += data.toString().trim()
       })
 
       proc.on('error', err => {
@@ -61,7 +64,7 @@ const runner = {
       })
 
       proc.on('close', code => {
-        code === 0 ? resolve(0) : reject(code)
+        code === 0 ? resolve(stdout) : reject(code)
       })
 
       // Reset user back to the root

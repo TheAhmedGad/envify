@@ -13,7 +13,9 @@ const mssql = {
       {
         type: 'input',
         name: 'sa_password',
-        message: 'Enter SA password',
+        message: output()
+          .primary('Please Enter Super Admin ( SA ) Password:')
+          .string(),
         default: this.sa_password,
         validate(answer) {
           //8 chars, uppercase letters, lowercase letters, numbers, and symbols.

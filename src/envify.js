@@ -10,7 +10,7 @@ const envify = {
       .prompt([
         {
           type: 'list',
-          message: 'Select services',
+          message: output().primary('Please Select Your Stack:').string(),
           name: 'stack',
           loop: false,
           choices: Object.keys(stacks).map(s => s),

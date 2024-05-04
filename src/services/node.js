@@ -12,7 +12,7 @@ const node = {
       {
         type: 'list',
         name: 'node_version',
-        message: 'Select Node.js version (LTS Only)',
+        message: output().primary('Select Node.js version (LTS Only)').string(),
         choices: [
           '20.12.2',
           '18.20.2',

@@ -28,6 +28,11 @@ function output() {
     return methods
   }
 
+  function primary(msg) {
+    message += chalk.magenta(msg)
+    return methods
+  }
+
   function log() {
     console.log(message) //stop chaining with and log the current message
   }
@@ -36,7 +41,7 @@ function output() {
     return message
   }
 
-  const methods = { text, success, error, warning, info, log, string }
+  const methods = { text, success, error, warning, info, primary, log, string }
 
   return methods
 }

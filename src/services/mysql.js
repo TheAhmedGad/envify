@@ -13,7 +13,7 @@ const mysql = {
       {
         type: 'input',
         name: 'mysql_password',
-        message: 'Enter MySQL password',
+        message: output().primary('Enter MySQL Root Password').string(),
         default: this.mysql_password
       }
     ])

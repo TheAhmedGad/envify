@@ -21,8 +21,7 @@ const dotfiles = {
     await this.askForRepositoryType()
     await this.askForRepositoryUrl()
     await this.checkRepositoryDirectory()
-
-    // TODO :: Asking for link the downloaded files to the home dir
+    await this.askForLinkDotFilesFilesToHome()
 
     if (this.repositoryType === 'Private') {
       await this.handlePrivateRepository()
@@ -74,6 +73,22 @@ const dotfiles = {
   },
 
   async askForRepositoryType() {
+    const { repositoryType } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'repositoryType',
+        message: 'Is your dotfiles repository Public or Private?',
+        choices: ['Public', 'Private'],
+        loop: false,
+        default: this.repositoryType
+      }
+    ])
+
+    this.repositoryType = repositoryType
+    return this
+  },
+
+  async askForLinkDotFilesFilesToHome() {
     const { repositoryType } = await inquirer.prompt([
       {
         type: 'list',
@@ -155,53 +170,54 @@ const dotfiles = {
         }
       ])
       .then(async answer => {
-        if (answer.ssh_added) {
-          const url = await this.buildUrl()
-          await runner
-            .as(username)
-            .run(`GIT_SSH_COMMAND="ssh -i ~/.ssh/envify" git ls-remote ${url}`)
-            .then(() => {})
-            .catch(async () => {
-              output()
-                .error(
-                  'Could not connect to the repository, please make sure that you added The SSH Correctly and try again.'
-                )
-                .log()
-              await this.testConnection() // recall
-            })
-        } else {
+        if (!answer.ssh_added) {
           await Promise.reject('Skipped')
         }
+
+        const url = await this.buildUrl()
+
+        // while user answered that he added ssh in his Private repository
+        // as this user I can ls-remote repository by the envify ssh key
+        // once this command respond successfully this means user machine can talk the git vendor with no issue
+        // and the next step we can clone the repository normally.
+        await runner
+          .as(username)
+          .run(`GIT_SSH_COMMAND="ssh -i ~/.ssh/envify" git ls-remote ${url}`)
+          .then(() => {})
+          .catch(async () => {
+            output()
+              .error(
+                'Could not connect to the repository, please make sure that you added The SSH Correctly and try again.'
+              )
+              .log()
+            await this.testConnection() // recall
+          })
       })
   },
-  //
-  // async moveFilesToHomeDirectory() {
-  //   // Link
-  //   // if yes move
-  //   try {
-  //     await runner.run(`git clone ${url} ~/dotfiles`)
-  //     return Promise.resolve()
-  //   } catch (error) {
-  //     return Promise.reject(error)
-  //   }
-  // },
 
   async handlePrivateRepository() {
     try {
+      // whenever the user select that his dotfiles repository is a Private repo
+      // we've to generate ssh key to allow envify to communicate with the git provider.
+
+      // Temp ssh key path.
       let sshPath = `/home/${username}/.ssh/envify`
 
+      // Dumping the path
       output()
         .primary('Generating Temp SSH key [ ')
         .warning(sshPath)
         .primary(' ]')
         .log()
 
+      // handle if the key already exists
       if (!existsSync(sshPath)) {
         await runner
           .as(username)
           .run(`ssh-keygen -t ed25519 -f ${sshPath} -C "Envify" -q -N ""`)
       }
 
+      // Dump the ssh public key to allowing user to take a copy to his dotfiles repository
       const publicKey = await runner.as(username).run(`cat ${sshPath}.pub`)
 
       output().success(publicKey).log()
@@ -218,6 +234,9 @@ const dotfiles = {
   },
 
   async buildUrl() {
+    // while the clone command depends on the repo type
+    // we've to build the url based on the type.
+
     if (this.repositoryType === 'Private')
       return `git@${this.repository.vcsProvider}:${this.repository.owner}/${this.repository.repo}.git`
 

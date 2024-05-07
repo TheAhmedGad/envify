@@ -42,6 +42,10 @@ function output() {
     console.log(message) //stop chaining with and log the current message
   }
 
+  function print(msg) {
+    return this.text(msg).log()
+  }
+
   function string() {
     return message
   }

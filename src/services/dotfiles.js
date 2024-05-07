@@ -4,13 +4,15 @@ import runner from '../utils/runner.js'
 import output from '../utils/output.js'
 import { URL } from 'url'
 import { spinner, username } from '../utils/helpers.js'
+const { homedir } = require('os')
 
 const dotfiles = {
   name: 'Dotfiles',
   repositoryType: 'Public',
   dotfilesRepositoryUrl: null,
-  moveFilesToHomeDirectoryDirectory: false,
+  linkFiles: false,
   overwriteDirectory: false,
+  testConnectionRetries: 3,
   repository: {
     vcsProvider: 'github.com',
     owner: '',
@@ -89,21 +91,23 @@ const dotfiles = {
   },
 
   async askForLinkDotFilesFilesToHome() {
-    const { repositoryType } = await inquirer.prompt([
+    const { linkFiles } = await inquirer.prompt([
       {
-        type: 'list',
-        name: 'repositoryType',
-        message: 'Is your dotfiles repository Public or Private?',
-        choices: ['Public', 'Private'],
-        loop: false,
-        default: this.repositoryType
+        type: 'confirm',
+        message:
+          'Do you want to link the dotfiles to your home directory after cloning the Repo?',
+        name: 'linkFiles',
+        default: false
       }
     ])
 
-    this.repositoryType = repositoryType
+    if (!linkFiles) {
+      return
+    }
+
+    this.linkFiles = true
     return this
   },
-
   async askForRepositoryUrl() {
     const { repositoryUrl } = await inquirer.prompt([
       {
@@ -115,6 +119,23 @@ const dotfiles = {
           if (value.trim() === '') {
             return 'Please enter a valid repository URL.'
           }
+
+          // Use regular expressions to validate if input is a valid Git SSH or HTTP URL
+
+          if (this.repositoryType === 'Private') {
+            const sshUrlRegex = /^git@github\.com:.+\.git$/
+
+            if (!sshUrlRegex.test(value)) {
+              return 'Please enter a valid Git SSH URL (e.g., git@github.com:username/repo.git) as your Repo type is a Private Repo.'
+            }
+          } else {
+            const httpUrlRegex = /^(http|https):\/\/[^ "]+\.git$/
+
+            if (!httpUrlRegex.test(value)) {
+              return 'Please enter a valid HTTP URL (e.g., https://github.com/username/repo.git) as your Repo type is a Public Repo.'
+            }
+          }
+
           return true
         }
       }
@@ -139,8 +160,17 @@ const dotfiles = {
         `GIT_SSH_COMMAND="ssh -i ~/.ssh/envify" git clone ${url} ${cloningPath}`
       )
 
-    // TODO :: linking the files or resolve promise
-    // .then()
+    if (this.linkFiles) {
+      await this.linkFilesToHomeDirectory()
+    }
+  },
+
+  async linkFilesToHomeDirectory() {
+    output().print('Linking Files...')
+    output().print(homedir)
+
+    // const command = isFile ? 'ln -s' : 'ln -sT';
+    // execSync(`${command} ${source} ${target}`, { stdio: 'inherit' });
   },
 
   async parseUrl() {
@@ -190,7 +220,13 @@ const dotfiles = {
                 'Could not connect to the repository, please make sure that you added The SSH Correctly and try again.'
               )
               .log()
-            await this.testConnection() // recall
+
+            if (this.testConnectionRetries > 0) {
+              this.testConnectionRetries--
+              await this.testConnection()
+            } else {
+              await Promise.reject('Maximum retries exceeded.')
+            }
           })
       })
   },
@@ -228,8 +264,7 @@ const dotfiles = {
         )
         .log()
     } catch (error) {
-      //spinner.failed('Failed to clone dotfiles repository')
-      return Promise.reject(error)
+      await Promise.reject(error)
     }
   },
 

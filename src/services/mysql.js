@@ -5,7 +5,7 @@ import { spinner } from '../utils/helpers.js'
 
 const mysql = {
   name: 'MySql',
-  mysql_password: 'root',
+  mysql_password: (Math.random() + 1).toString(36).substring(2),
   installation_success: true,
 
   async prepare() {

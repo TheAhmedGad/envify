@@ -37,6 +37,7 @@ const php = {
         type: 'list',
         name: 'phpVersion',
         message: output().primary('Select PHP Version').string(),
+        default: this.selectedVersion,
         choices: [
           '8.3',
           '8.2',

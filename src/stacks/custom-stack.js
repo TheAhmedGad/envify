@@ -51,9 +51,10 @@ const customStack = {
         }
       }
     ])
+
     for (const service of answer.services) this.services.push(services[service])
     return this
   }
 }
 
-export { customStack }
+export { customStack, services }

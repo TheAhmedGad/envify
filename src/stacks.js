@@ -3,9 +3,12 @@ import { laravelStack } from './stacks/laravel-stack.js'
 import { customStack } from './stacks/custom-stack.js'
 
 const stacks = {
-  Laravel: laravelStack,
-  DotNet: dotnetStack,
-  Custom: customStack
+  default: 'Laravel',
+  stacks: {
+    Laravel: laravelStack,
+    DotNet: dotnetStack,
+    Custom: customStack
+  }
 }
 
 export { stacks }

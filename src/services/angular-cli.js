@@ -17,7 +17,7 @@ const AngularCli = {
         await runner
           .as(username)
           .run(
-            'source /home/ubuntu/.nvm/nvm.sh && npm install -g @angular/cli --loglevel verbose'
+            `source /home/${username}/.nvm/nvm.sh && npm install -g @angular/cli --loglevel verbose`
           )
           .catch(err => output().error(err).log())
         return Promise.resolve()

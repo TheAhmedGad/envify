@@ -50,4 +50,15 @@ const isPackageInstalled = async packageName => {
   }
 }
 
-export { formatElapsedTime, isPackageInstalled, username, spinner }
+const objectWithoutKey = (object, key) => {
+  const { [key]: deletedKey, ...otherKeys } = object
+  return otherKeys
+}
+
+export {
+  formatElapsedTime,
+  isPackageInstalled,
+  username,
+  spinner,
+  objectWithoutKey
+}

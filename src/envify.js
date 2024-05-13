@@ -13,7 +13,7 @@ const envify = {
           message: output().primary('Please Select Your Stack:').string(),
           name: 'stack',
           loop: false,
-          choices: Object.keys(stacks).map(s => s),
+          choices: Object.keys(stacks.stacks).map(s => s),
           validate(answer) {
             if (answer.length < 1) return 'You must choose stack.'
             return true
@@ -21,7 +21,7 @@ const envify = {
         }
       ])
       .then(async answer => {
-        const stack = stacks[answer.stack]
+        const stack = stacks.stacks[answer.stack]
         await stack.collectStackServices()
 
         for (const service of stack.services) await service.prepare()

@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import { stacks } from './stacks.js'
 import { Spinner } from '@topcli/spinner'
 import output from './utils/output.js'
+import { formatElapsedTime } from './utils/helpers.js'
 
 const envify = {
   run() {
@@ -24,7 +25,14 @@ const envify = {
         const stack = stacks.stacks[answer.stack]
         await stack.collectStackServices()
 
-        for (const service of stack.services) await service.prepare()
+        for (let index = 0; index < stack.services.length; index++)
+          await stack.services[index].prepare().catch(err => {
+            stack.services.splice(index, 1)
+          })
+
+        if (!stack.services.length) {
+          process.exit(0)
+        }
 
         output()
           .success(
@@ -54,7 +62,7 @@ const envify = {
                   .catch(err => {})
 
               spinner.succeed(
-                ` All services installed  (${spinner.elapsedTime.toFixed(2)}ms)`
+                `Process Completed ${formatElapsedTime(spinner)} \n`
               )
 
               for (const service of stack.services) await service.afterInstall()

@@ -13,6 +13,11 @@ function output() {
     return methods
   }
 
+  function bold(msg) {
+    message += chalk.bold(msg)
+    return methods
+  }
+
   function error(msg) {
     message += chalk.red(msg)
     return methods
@@ -37,11 +42,25 @@ function output() {
     console.log(message) //stop chaining with and log the current message
   }
 
+  function print(msg) {
+    return this.text(msg).log()
+  }
+
   function string() {
     return message
   }
 
-  const methods = { text, success, error, warning, info, primary, log, string }
+  const methods = {
+    text,
+    success,
+    bold,
+    error,
+    warning,
+    info,
+    primary,
+    log,
+    string
+  }
 
   return methods
 }

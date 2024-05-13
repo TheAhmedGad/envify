@@ -10,9 +10,11 @@ import { node } from '../services/node.js'
 import inquirer from 'inquirer'
 import { pm2 } from '../services/pm2.js'
 import { AngularCli } from '../services/angular-cli.js'
+import { dotfiles } from '../services/dotfiles.js'
 
 const services = {
   Nginx: nginx,
+  DotFiles: dotfiles,
   MySQL: mysql,
   MsSQL: mssql,
   GIT: git,

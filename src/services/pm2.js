@@ -17,7 +17,7 @@ const pm2 = {
         await runner
           .as(username)
           .run(
-            'source /home/ubuntu/.nvm/nvm.sh && npm install pm2 -g --loglevel verbose'
+            'source $HOME/.nvm/nvm.sh && npm install pm2 -g --loglevel verbose'
           )
           .catch(err => output().error(err).log())
         return Promise.resolve()
